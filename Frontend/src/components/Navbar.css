@@ -1,0 +1,145 @@
+/* Navbar container */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #4a90e2, #0c54b2);
+  padding: 15px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 97%;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 30px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #e2e8f0;
+}
+
+/* Buttons Container */
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-btn {
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+}
+
+.login-btn:hover {
+  background-color: #ffffff;
+  color: #0c54b2;
+}
+
+.signup-btn {
+  background-color: #ff7f50;
+  color: #ffffff;
+  border: none;
+}
+
+.signup-btn:hover {
+  background-color: #ffffff;
+  color: #ff7f50;
+}
+
+/* Mobile Menu Icon */
+.mobile-menu-icon {
+  display: none;
+  font-size: 28px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* Mobile Menu */
+.nav-links-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background: #4a90e2;
+  padding: 20px;
+  z-index: 999;
+}
+
+.nav-links-mobile a {
+  font-size: 18px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-icon {
+    display: block;
+  }
+
+  .nav-buttons {
+    display: none; /* Hide buttons in mobile view, include in mobile dropdown if needed */
+  }
+}
+
+@media (max-width: 1024px) {
+  .nav-link {
+    font-size: 16px;
+    margin-left: 20px;
+  }
+
+  .nav-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .signup-btn {
+    padding: 8px 16px;
+  }
+}
