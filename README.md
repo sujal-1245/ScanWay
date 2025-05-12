@@ -76,6 +76,9 @@ The frontend will run at `http://localhost:3000/`.
 ![image](https://github.com/user-attachments/assets/5332c8a7-b7d5-4823-abb7-4af6ef996403)
 
 
+### 🔹 Error Comparison Chart
+
+![image](https://github.com/user-attachments/assets/507f7e02-28dd-425e-99e7-53850b2c8f45)
 
 ---
 
