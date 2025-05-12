@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import ErrorMetricsChart from "./ErrorMetricsChart"; // Import the new ErrorMetricsChart component
 
 const GetStartedPage = () => {
   const [formData, setFormData] = useState({
@@ -197,7 +198,19 @@ const GetStartedPage = () => {
             This chart compares PCI (%) predictions between different models based on your inputs.
           </p>
         </motion.div>
+        
       )}
+
+{/* 📉 Error Metrics Chart (New Section) */}
+<motion.div
+  whileInView={{ opacity: 1, y: 0 }}
+  initial={{ opacity: 0, y: 30 }}
+  transition={{ duration: 0.6 }}
+  className="mt-12"
+>
+  <ErrorMetricsChart />
+</motion.div>
+      
     </div>
   );
 };

@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import matplotlib
+matplotlib.use('Agg')  # Use non-GUI backend suitable for servers
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import io
 import base64
 import joblib
-
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from preprocess import preprocess_input  # Import your actual preprocessing function
 
 # Initialize Flask app
@@ -85,6 +88,60 @@ def generate_chart(predictions):
     plt.close(fig)
     buf.seek(0)
     return base64.b64encode(buf.read()).decode("utf-8")
+
+@app.route('/api/error-chart')
+def error_chart():
+    # Load models
+    models = {
+        "CatBoost": joblib.load("models/catboost_model.pkl"),
+        "Random Forest": joblib.load("models/random_forest_model.pkl"),
+        "XGBoost": joblib.load("models/xgboost_model.pkl"),
+        "Gradient Boosting": joblib.load("models/gradient_boosting_model.pkl"),
+        "Decision Tree": joblib.load("models/decision_tree_model.pkl"),
+        "Linear Regression": joblib.load("models/linear_regression_model.pkl"),
+        "SVR": joblib.load("models/svr_model.pkl")
+    }
+
+    # Load test data (already preprocessed)
+    X_test_scaled = joblib.load("models/X_test_scaled.pkl")
+    y_test = joblib.load("models/y_test.pkl")
+
+    # Calculate metrics
+    mae_scores = []
+    mse_scores = []
+    model_names = []
+
+    for name, model in models.items():
+        y_pred = model.predict(X_test_scaled)
+        model_names.append(name)
+        mae_scores.append(mean_absolute_error(y_test, y_pred))
+        mse_scores.append(mean_squared_error(y_test, y_pred))
+
+    # Plotting
+    plt.style.use('seaborn-v0_8-darkgrid')
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    ax.plot(model_names, mae_scores, marker='o', label='MAE', linewidth=2.5)
+    ax.plot(model_names, mse_scores, marker='s', label='MSE', linewidth=2.5)
+
+    ax.set_title("Model Error Comparison", fontsize=18, fontweight='bold', pad=20)
+    ax.set_ylabel("Error", fontsize=14)
+    ax.set_xlabel("Model", fontsize=14)
+    ax.tick_params(axis='x', rotation=30)
+    ax.legend()
+    ax.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+
+    # Convert to base64
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', dpi=150)
+    plt.close(fig)
+    buf.seek(0)
+    chart_base64 = base64.b64encode(buf.read()).decode('utf-8')
+
+    return jsonify({'chart': chart_base64})
+
 
 @app.route("/api/v1/predict", methods=["POST"])
 def predict():

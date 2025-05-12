@@ -71,23 +71,32 @@ linear_regression_model.fit(X_train_scaled, y_train)
 # Train SVR model
 svr_model.fit(X_train_scaled, y_train)
 
-# Evaluate models
-catboost_score = catboost_model.score(X_test_scaled, y_test)
-rf_score = rf_model.score(X_test_scaled, y_test)
-xgboost_score = xgboost_model.score(X_test_scaled, y_test)
-gradient_boosting_score = gradient_boosting_model.score(X_test_scaled, y_test)
-decision_tree_score = decision_tree_model.score(X_test_scaled, y_test)
-linear_regression_score = linear_regression_model.score(X_test_scaled, y_test)
-svr_score = svr_model.score(X_test_scaled, y_test)
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
 
-# Print scores for all models
-print(f"CatBoost Model R² Score: {catboost_score}")
-print(f"RandomForest Model R² Score: {rf_score}")
-print(f"XGBoost Model R² Score: {xgboost_score}")
-print(f"GradientBoosting Model R² Score: {gradient_boosting_score}")
-print(f"DecisionTree Model R² Score: {decision_tree_score}")
-print(f"LinearRegression Model R² Score: {linear_regression_score}")
-print(f"SVR Model R² Score: {svr_score}")
+# Helper function to print evaluation metrics
+def print_metrics(name, model, X_test, y_test):
+    predictions = model.predict(X_test)
+    r2 = r2_score(y_test, predictions)
+    mae = mean_absolute_error(y_test, predictions)
+    mse = mean_squared_error(y_test, predictions)
+    rmse = np.sqrt(mse)
+
+    print(f"{name} Model Evaluation:")
+    print(f"  R² Score: {r2:.4f}")
+    print(f"  MAE     : {mae:.4f}")
+    print(f"  MSE     : {mse:.4f}")
+    print(f"  RMSE    : {rmse:.4f}")
+    print("-" * 40)
+
+# Evaluate and print metrics for all models
+print_metrics("CatBoost", catboost_model, X_test_scaled, y_test)
+print_metrics("RandomForest", rf_model, X_test_scaled, y_test)
+print_metrics("XGBoost", xgboost_model, X_test_scaled, y_test)
+print_metrics("GradientBoosting", gradient_boosting_model, X_test_scaled, y_test)
+print_metrics("DecisionTree", decision_tree_model, X_test_scaled, y_test)
+print_metrics("LinearRegression", linear_regression_model, X_test_scaled, y_test)
+print_metrics("SVR", svr_model, X_test_scaled, y_test)
 
 # Save the models, scaler, and imputer
 with open('models/catboost_model.pkl', 'wb') as f:
@@ -117,6 +126,13 @@ with open('models/scaler.pkl', 'wb') as f:
 # Save the imputer as well, in case we need to handle missing values during prediction
 with open('models/imputer.pkl', 'wb') as f:
     pickle.dump(imputer, f)
+
+with open("models/X_test_scaled.pkl", 'wb') as f:
+    pickle.dump(X_test_scaled, f)
+
+with open("models/y_test.pkl", 'wb') as f:
+    pickle.dump(y_test, f)
+
 
 # Assuming this is your preprocessing logic
 def preprocess_input(data):
